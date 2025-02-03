@@ -1,0 +1,5 @@
+outs:
+- md5: a3786afb7d37c2731430d66f4f531822
+  size: 4136132
+  hash: md5
+  path: ocr_model_weights.pt

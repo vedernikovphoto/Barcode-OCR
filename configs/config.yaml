@@ -1,0 +1,61 @@
+project_name: 'Barcodes_OCR'
+experiment_name: 'exp1'
+num_classes: 24
+log_every_n_steps: 10
+n_epochs: 150
+accelerator: 'gpu'
+seed: 42
+device: 0
+monitor_metric: 'valid_ctc_loss'
+monitor_mode: 'min'
+
+mdl_kwargs:
+  backbone_name: 'resnet18'
+  pretrained: true
+  rnn_features_num: 48
+  rnn_hidden_size: 64
+  rnn_dropout: 0.1
+  rnn_bidirectional: true
+  num_classes: 11
+
+optimizer: 'torch.optim.AdamW'
+optimizer_kwargs:
+  lr: 1e-3
+  weight_decay: 1e-5
+
+scheduler: 'torch.optim.lr_scheduler.ReduceLROnPlateau'
+scheduler_kwargs:
+  mode: 'min'
+  factor: 0.5
+  patience: 20
+  min_lr: 1e-5
+
+losses:
+  - name: 'ctc'
+    weight: 1.0
+    loss_fn: 'torch.nn.CTCLoss'
+    loss_kwargs: {}
+
+data_config:
+  batch_size: 48
+  num_iterations: 100
+  n_workers: 4
+  width: 416
+  height: 96
+  vocab: '0123456789'
+  text_size: 13
+
+augmentation_params:
+  crop_perspective_p: 0.8
+  scale_x_p: 0.8
+  random_brightness_contrast_p: 1.0
+  clahe_p: 0.5
+  blur_p: 0.3
+  blur_limit: 3
+  gauss_noise_p: 0.3
+  downscale_p: 0.5
+  downscale_scale_min: 0.3
+  downscale_scale_max: 0.9
+  coarse_dropout_p: 0.3
+  coarse_dropout_max_holes: 20
+  coarse_dropout_min_holes: 10
